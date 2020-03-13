@@ -1,8 +1,17 @@
 package common
 
+import "github.com/spf13/viper"
+
 type contextKey string
 
 var StashInfoKey = contextKey("StashInfoKey")
+
+const (
+	UserNameKey = "%s::user"
+	PasswdKey   = "%s::passwd"
+)
+
+var v *viper.Viper
 
 type StashInfo struct {
 	host, project, repo string
@@ -27,4 +36,12 @@ func (s *StashInfo) Repo() *string {
 // Credential return credential from stashInfo struct
 func (s *StashInfo) Credential() *Credential {
 	return &s.credential
+}
+
+func Config() *viper.Viper {
+	return v
+}
+
+func SetConfig(c *viper.Viper) {
+	v = c
 }

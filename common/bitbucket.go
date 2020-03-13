@@ -28,7 +28,7 @@ func APIClient(cmd *cobra.Command) *bitbucketv1.APIClient {
 		stashInfo.host = fmt.Sprintf("https://%s", stashInfo.host)
 	}
 
-	basicAuth := bitbucketv1.BasicAuth{UserName: stashInfo.Credential().GetUser(), Password: stashInfo.Credential().GetPasswd()}
+	basicAuth := bitbucketv1.BasicAuth{UserName: stashInfo.Credential().GetUser(stashInfo.host), Password: stashInfo.Credential().GetPasswd()}
 	ctx = context.WithValue(ctx, bitbucketv1.ContextBasicAuth, basicAuth)
 
 	client := bitbucketv1.NewAPIClient(
