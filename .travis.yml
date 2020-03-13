@@ -1,0 +1,21 @@
+language: go
+install: true
+go:
+  - 1.13.x
+  - 1.14.x
+  - master
+
+script:
+  - 'make ${JOB}'
+env:
+  global:
+    - GO111MODULE=on
+    - GOARCH=amd64
+  matrix:
+    - JOB=test
+    - JOB=lint
+    - JOB=default
+jobs:
+  fast_finish: true
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
