@@ -4,11 +4,13 @@ import "github.com/spf13/viper"
 
 type contextKey string
 
-var StashInfoKey = contextKey("StashInfoKey")
-
 const (
+	StashInfoKey = contextKey("StashInfoKey")
+
 	UserNameKey = "%s::user"
 	PasswdKey   = "%s::passwd"
+
+	AppName = "gobbs"
 )
 
 var v *viper.Viper

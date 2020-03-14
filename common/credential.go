@@ -11,8 +11,11 @@ import (
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
+var binary = "gopass"
+
 type Credential struct {
 	user, passwd string
+	new          bool
 }
 
 func (c *Credential) User() *string {
@@ -23,14 +26,18 @@ func (c *Credential) Passwd() *string {
 	return &c.passwd
 }
 
+func (c *Credential) IsNew() bool {
+	return c.new
+}
+
 func (c *Credential) GetUser(host string) string {
 	if c.user == "" {
+		c.new = false
 		cachedCredentials := Config().GetStringMapString(host)
 		c.user = cachedCredentials["user"]
 		if Config().GetString("password_method") == "gopass" {
 			// Got from go-jira
 			log.Printf("Querying gopass password source.")
-			binary := "gopass"
 
 			if passDir := Config().GetString("password_storage"); passDir != "" {
 				orig := os.Getenv("PASSWORD_STORE_DIR")
@@ -44,7 +51,7 @@ func (c *Credential) GetUser(host string) string {
 			if bin, err := exec.LookPath(binary); err == nil {
 				log.Printf("found gopass at: %s", bin)
 				buf := bytes.NewBufferString("")
-				cmd := exec.Command(bin, "show", "-o", fmt.Sprintf("Gobbs/%s", strings.Replace(host, "://", "-", -1)))
+				cmd := exec.Command(bin, "show", "-o", fmt.Sprintf("%s/%s", AppName, strings.Replace(host, "://", "-", -1)))
 				cmd.Stdout = buf
 				cmd.Stderr = os.Stderr
 				if err := cmd.Run(); err == nil {
@@ -60,6 +67,7 @@ func (c *Credential) GetUser(host string) string {
 		}
 	}
 	if c.user == "" {
+		c.new = true
 		prompt := fmt.Sprintf("Stash Username [%s]:", host)
 		help := ""
 		err := survey.AskOne(
@@ -114,7 +122,7 @@ func SavePasswdExternal(host, passwd string) error {
 			log.Printf("found gopass at: %s", bin)
 			buf := bytes.NewBufferString("")
 			stdin := bytes.NewBufferString(passwd)
-			cmd := exec.Command(bin, "insert", "-f", fmt.Sprintf("Gobbs/%s", strings.Replace(host, "://", "-", -1)))
+			cmd := exec.Command(bin, "insert", "-f", fmt.Sprintf("%s/%s", AppName, strings.Replace(host, "://", "-", -1)))
 			cmd.Stdin = stdin
 			cmd.Stdout = buf
 			cmd.Stderr = os.Stderr
