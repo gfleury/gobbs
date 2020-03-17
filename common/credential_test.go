@@ -13,10 +13,11 @@ func (s *S) TestSavePasswdExternal(c *check.C) {
 	var yamlExample = []byte(`
 password_method: gopass
 `)
-	Config().ReadConfig(bytes.NewBuffer(yamlExample))
+	err := Config().ReadConfig(bytes.NewBuffer(yamlExample))
+	c.Assert(err, check.IsNil)
 
 	binary = "/bin/echo"
-	err := SavePasswdExternal("stash.example.com", "password")
+	err = SavePasswdExternal("stash.example.com", "password")
 	c.Assert(err, check.IsNil)
 }
 

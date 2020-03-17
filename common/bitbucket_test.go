@@ -21,7 +21,8 @@ https://github.com:
   user: gfleury
   passwd: 123
 `)
-	Config().ReadConfig(bytes.NewBuffer(yamlExample))
+	err := Config().ReadConfig(bytes.NewBuffer(yamlExample))
+	c.Assert(err, check.IsNil)
 
 	a := cobra.Command{
 		Run: func(cmd *cobra.Command, args []string) {
@@ -30,14 +31,16 @@ https://github.com:
 	}
 	ctx := APIClientContext(&StashInfo{})
 
-	err := a.ExecuteContext(ctx)
+	err = a.ExecuteContext(ctx)
 	c.Assert(err, check.IsNil)
 
 	err = os.Chdir("..")
+	c.Assert(err, check.IsNil)
 	api, cancel, err := APIClient(&a)
 	defer cancel()
 	c.Assert(err, check.IsNil)
 	err = os.Chdir("common")
+	c.Assert(err, check.IsNil)
 	c.Assert(api, check.NotNil)
 	os.Args = savedArgs
 }
