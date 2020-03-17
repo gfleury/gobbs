@@ -2,31 +2,25 @@ package pullrequests
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"sort"
 	"time"
 
 	"github.com/gfleury/gobbs/common"
+	"github.com/gfleury/gobbs/common/log"
 
 	bitbucketv1 "github.com/gfleury/go-bitbucket-v1"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
-// PullRequestRoot cmd root for cobra
-var PullRequestRoot = &cobra.Command{
-	Use:   "pr",
-	Short: "Interact with pull requests",
-	Args:  cobra.MinimumNArgs(0),
-	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			List.Run(cmd, args)
-		}
-	},
+var (
+	listState *string
+)
+
+func init() {
+	listState = List.Flags().StringP("state", "s", "OPEN", "List only PR's in that state (ALL, OPEN, DECLINED or MERGED)")
 }
 
-//List is the cmd implementation for Listing Pull Requests
+// List is the cmd implementation for Listing Pull Requests
 var List = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"ls"},
@@ -41,7 +35,14 @@ var List = &cobra.Command{
 		}
 
 		for {
-			apiClient := common.APIClient(cmd)
+			var hasNext bool
+			apiClient, cancel, err := common.APIClient(cmd)
+			defer cancel()
+
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+
 			stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
 			response, err := apiClient.DefaultApi.GetPullRequestsPage(*stashInfo.Project(), *stashInfo.Repo(), opts)
 			if err != nil {
@@ -50,14 +51,13 @@ var List = &cobra.Command{
 
 			pagedPrs, err := bitbucketv1.GetPullRequestsResponse(response)
 			if err != nil {
-				log.Fatalln(err.Error())
+				log.Fatal(err.Error())
 			}
 			prs = append(prs, pagedPrs...)
 
-			if response.Values["isLastPage"].(bool) {
+			hasNext, opts["start"] = bitbucketv1.HasNextPage(response)
+			if !hasNext {
 				break
-			} else {
-				opts["start"] = int(response.Values["nextPageStart"].(float64))
 			}
 		}
 
@@ -65,17 +65,13 @@ var List = &cobra.Command{
 			return prs[i].ID > prs[j].ID
 		})
 
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"ID", "State", "Created", "Author", "Short Desc.", "Reviewers"})
-		table.SetAutoWrapText(true)
-		table.SetAutoFormatHeaders(true)
-		table.SetColWidth(40)
-		table.SetRowSeparator("-")
-		table.SetRowLine(true)
+		header := []string{"ID", "State (Version)", "Created", "Author", "Short Desc.", "Reviewers"}
+		table := common.Table(header)
+
 		for _, pr := range prs {
 			table.Append([]string{
 				fmt.Sprintf("%d", pr.ID),
-				pr.State,
+				fmt.Sprintf("%s (%v)", pr.State, pr.Version),
 				fmt.Sprint(time.Unix(pr.CreatedDate/1000, 0).Format("2006-01-02T15:04:05-0700")),
 				pr.Author.User.Name,
 				fmt.Sprintf("[%s -> %s] %s", pr.FromRef.DisplayID, pr.ToRef.DisplayID, pr.Title),
@@ -84,7 +80,7 @@ var List = &cobra.Command{
 						r = fmt.Sprintf("%s%s %s\n", r, reviewer.User.Name,
 							func() string {
 								if reviewer.Approved {
-									return "(V)"
+									return "(A)"
 								}
 								return "( )"
 							}())
@@ -95,12 +91,4 @@ var List = &cobra.Command{
 		}
 		table.Render()
 	},
-}
-
-var (
-	listState *string
-)
-
-func init() {
-	listState = List.Flags().StringP("state", "s", "OPEN", "List only PR's in that state (ALL, OPEN, DECLINED or MERGED)")
 }

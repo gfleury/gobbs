@@ -3,10 +3,11 @@ package common
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/gfleury/gobbs/common/log"
 
 	"gopkg.in/AlecAivazis/survey.v1"
 )
@@ -30,6 +31,10 @@ func (c *Credential) IsNew() bool {
 	return c.new
 }
 
+func (c *Credential) New() {
+	c.new = true
+}
+
 func (c *Credential) GetUser(host string) string {
 	if c.user == "" {
 		c.new = false
@@ -37,19 +42,19 @@ func (c *Credential) GetUser(host string) string {
 		c.user = cachedCredentials["user"]
 		if Config().GetString("password_method") == "gopass" {
 			// Got from go-jira
-			log.Printf("Querying gopass password source.")
+			log.Debugf("Querying gopass password source.")
 
 			if passDir := Config().GetString("password_storage"); passDir != "" {
 				orig := os.Getenv("PASSWORD_STORE_DIR")
-				log.Printf("using password-directory: %s", passDir)
+				log.Debugf("using password-directory: %s", passDir)
 				os.Setenv("PASSWORD_STORE_DIR", passDir)
 				defer os.Setenv("PASSWORD_STORE_DIR", orig)
 			}
 			if passDir := os.Getenv("PASSWORD_STORE_DIR"); passDir != "" {
-				log.Printf("using PASSWORD_STORE_DIR=%s", passDir)
+				log.Debugf("using PASSWORD_STORE_DIR=%s", passDir)
 			}
 			if bin, err := exec.LookPath(binary); err == nil {
-				log.Printf("found gopass at: %s", bin)
+				log.Debugf("found gopass at: %s", bin)
 				buf := bytes.NewBufferString("")
 				cmd := exec.Command(bin, "show", "-o", fmt.Sprintf("%s/%s", AppName, strings.Replace(host, "://", "-", -1)))
 				cmd.Stdout = buf
@@ -57,10 +62,10 @@ func (c *Credential) GetUser(host string) string {
 				if err := cmd.Run(); err == nil {
 					c.passwd = strings.TrimSpace(buf.String())
 				} else {
-					log.Printf("gopass command failed with:\n%s", buf.String())
+					log.Debugf("gopass command failed with:\n%s", buf.String())
 				}
 			} else {
-				log.Printf("Gopass binary was not found! Fallback to default password behaviour!")
+				log.Debugf("Gopass binary was not found! Fallback to default password behaviour!")
 			}
 		} else {
 			c.passwd = cachedCredentials["passwd"]
@@ -106,20 +111,19 @@ func (c *Credential) GetPasswd() string {
 
 func SavePasswdExternal(host, passwd string) error {
 	if Config().GetString("password_method") == "gopass" {
-		log.Printf("Saving gopass password source.")
-		binary := "gopass"
+		log.Debugf("Saving gopass password source.")
 
 		if passDir := Config().GetString("password_storage"); passDir != "" {
 			orig := os.Getenv("PASSWORD_STORE_DIR")
-			log.Printf("using password-directory: %s", passDir)
+			log.Debugf("using password-directory: %s", passDir)
 			os.Setenv("PASSWORD_STORE_DIR", passDir)
 			defer os.Setenv("PASSWORD_STORE_DIR", orig)
 		}
 		if passDir := os.Getenv("PASSWORD_STORE_DIR"); passDir != "" {
-			log.Printf("using PASSWORD_STORE_DIR=%s", passDir)
+			log.Debugf("using PASSWORD_STORE_DIR=%s", passDir)
 		}
 		if bin, err := exec.LookPath(binary); err == nil {
-			log.Printf("found gopass at: %s", bin)
+			log.Debugf("found gopass at: %s", bin)
 			buf := bytes.NewBufferString("")
 			stdin := bytes.NewBufferString(passwd)
 			cmd := exec.Command(bin, "insert", "-f", fmt.Sprintf("%s/%s", AppName, strings.Replace(host, "://", "-", -1)))

@@ -18,6 +18,7 @@ var v *viper.Viper
 type StashInfo struct {
 	host, project, repo string
 	credential          Credential
+	timeout             int
 }
 
 // Host return host from stashInfo struct
@@ -38,6 +39,11 @@ func (s *StashInfo) Repo() *string {
 // Credential return credential from stashInfo struct
 func (s *StashInfo) Credential() *Credential {
 	return &s.credential
+}
+
+// Timeout return timeout from stashInfo struct
+func (s *StashInfo) Timeout() *int {
+	return &s.timeout
 }
 
 func Config() *viper.Viper {

@@ -1,7 +1,7 @@
 package common
 
 import (
-	"log"
+	"fmt"
 	"net/url"
 	"os"
 	"regexp"
@@ -16,18 +16,16 @@ var (
 )
 
 // GitInfo try to probe stash/bitbucket information from git repository
-func GitInfo() (host, project, repo string) {
-	cwd, err := os.Getwd()
+func GitInfo() (host, project, repo string, err error) {
+	gitRepo, err := openRepo()
 	if err != nil {
-		log.Fatalf("Unable to get current directory: %s", err.Error())
-	}
-	gitRepo, err := git.PlainOpen(cwd)
-	if err != nil {
-		log.Fatalf("Unable to open git repository: %s. CWD: %s", err.Error(), cwd)
+		err = fmt.Errorf("Unable to open git repository: %s", err.Error())
+		return
 	}
 	remotes, err := gitRepo.Remotes()
 	if err != nil {
-		log.Fatalf("Unable to get remote references from git repository: %s", err.Error())
+		err = fmt.Errorf("Unable to get remote references from git repository: %s", err.Error())
+		return
 	}
 
 	for _, remote := range remotes {
@@ -43,7 +41,7 @@ func GitInfo() (host, project, repo string) {
 	return
 }
 
-func parseGitURL(rawURL string) (host, project, repo string) {
+func parseGitURL(rawURL string) (host, project, repo string, err error) {
 	if !matchesScheme(rawURL) && matchesScpLike(rawURL) {
 		_, host, _, path := findScpLikeComponents(rawURL)
 		idx1, idx2 := 1, 2
@@ -52,17 +50,18 @@ func parseGitURL(rawURL string) (host, project, repo string) {
 		}
 		urlPath := strings.Split(path, "/")
 		if len(urlPath) > 1 {
-			return host, urlPath[idx1], strings.Split(urlPath[idx2], ".")[0]
+			return host, urlPath[idx1], strings.Split(urlPath[idx2], ".")[0], err
 		}
 	}
 
 	gitURL, err := url.Parse(rawURL)
 	if err != nil {
-		log.Fatalf("Unable to parse remote git URL from git repository: %s", err.Error())
+		err = fmt.Errorf("Unable to parse remote git URL from git repository: %s", err.Error())
+		return
 	}
 	urlPath := strings.Split(gitURL.Path, "/")
 	if len(urlPath) > 1 {
-		return gitURL.Hostname(), urlPath[1], strings.Split(urlPath[2], ".")[0]
+		return gitURL.Hostname(), urlPath[1], strings.Split(urlPath[2], ".")[0], err
 	}
 	return
 }
@@ -83,4 +82,13 @@ func findScpLikeComponents(url string) (user, host, port, path string) {
 func matchesScheme(url string) bool {
 	is := isSchemeRegExp.MatchString(url)
 	return is
+}
+
+func openRepo() (*git.Repository, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		err = fmt.Errorf("Unable to get current directory: %s", err.Error())
+		return nil, err
+	}
+	return git.PlainOpen(cwd)
 }
