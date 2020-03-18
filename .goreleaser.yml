@@ -3,8 +3,8 @@
 before:
   hooks:
 builds:
-- env:
-  - CGO_ENABLED=0
+  - env:
+      - CGO_ENABLED=0
 release:
   disable: true
 archive:
@@ -15,18 +15,12 @@ archive:
     386: i386
     amd64: x86_64
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 snapshot:
   name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
-s3:
-  -
-    bucket: ty-rpm-deb-packages 
-    region: eu-central-1 
-    folder: "packages/tsuru-bluegreen/{{.Version}}"
-    acl: public-read
+      - "^docs:"
+      - "^test:"
