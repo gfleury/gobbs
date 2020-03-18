@@ -44,6 +44,10 @@ github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWo
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/gfleury/go-bitbucket-v1 v0.0.0-20200317193503-da305a07b84c h1:7MJF79GD/DnxuutbkO0Oerj+aza6QDBcZhLwjwLRw7U=
 github.com/gfleury/go-bitbucket-v1 v0.0.0-20200317193503-da305a07b84c/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318140919-ffb767fdb883 h1:1YLSEZq76f+XI6vIG4YmqBEUlFm1nNduVL48zyQJZuI=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318140919-ffb767fdb883/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318195912-d6c940c1671f h1:iW/R+WKgi2OTY1hs407KMtAqwL7AznEwA2p06lFVz6w=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318195912-d6c940c1671f/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/gliderlabs/ssh v0.2.2 h1:6zsha5zo/TWhRhwqCD3+EarCAgZ2yN28ipRnGPnwkI0=
 github.com/gliderlabs/ssh v0.2.2/go.mod h1:U7qILu1NlMHj9FlMhZLlkCdDnU1DBEAqr0aevW3Awn0=

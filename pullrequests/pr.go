@@ -6,6 +6,9 @@ func init() {
 	PullRequestRoot.AddCommand(List)
 	PullRequestRoot.AddCommand(Create)
 	PullRequestRoot.AddCommand(Delete)
+	PullRequestRoot.AddCommand(Approve)
+	PullRequestRoot.AddCommand(Merge)
+	PullRequestRoot.AddCommand(Info)
 }
 
 // PullRequestRoot cmd root for cobra

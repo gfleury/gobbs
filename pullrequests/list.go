@@ -2,6 +2,7 @@ package pullrequests
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"sort"
 	"time"
@@ -47,7 +48,7 @@ var List = &cobra.Command{
 			stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
 			response, err := apiClient.DefaultApi.GetPullRequestsPage(*stashInfo.Project(), *stashInfo.Repo(), opts)
 
-			if response.Response.StatusCode >= http.StatusMultipleChoices {
+			if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
 				common.PrintApiError(response.Values)
 			}
 
@@ -80,6 +81,7 @@ var List = &cobra.Command{
 				fmt.Sprintf("%s (%v)", pr.State, pr.Version),
 				fmt.Sprint(time.Unix(pr.CreatedDate/1000, 0).Format("2006-01-02T15:04:05-0700")),
 				pr.Author.User.Name,
+				//fmt.Sprintf("%d / %d", pr.Properties.OpenTaskCount, pr.Properties.ResolvedTaskCount),
 				fmt.Sprintf("[%s -> %s] %s", pr.FromRef.DisplayID, pr.ToRef.DisplayID, pr.Title),
 				func() (r string) {
 					for _, reviewer := range pr.Reviewers {

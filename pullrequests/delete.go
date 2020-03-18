@@ -1,6 +1,7 @@
 package pullrequests
 
 import (
+	"net"
 	"net/http"
 	"strconv"
 
@@ -41,7 +42,7 @@ var Delete = &cobra.Command{
 
 		response, err := apiClient.DefaultApi.DeleteWithVersion(*stashInfo.Project(), *stashInfo.Repo(), prID, *prVersion)
 
-		if response.Response.StatusCode >= http.StatusMultipleChoices {
+		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
 			common.PrintApiError(response.Values)
 		}
 

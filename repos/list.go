@@ -2,6 +2,7 @@ package repos
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"sort"
 
@@ -46,7 +47,7 @@ var List = &cobra.Command{
 			stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
 			response, err := apiClient.DefaultApi.GetRepositoriesWithOptions(*stashInfo.Project(), opts)
 
-			if response.Response.StatusCode >= http.StatusMultipleChoices {
+			if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
 				common.PrintApiError(response.Values)
 			}
 

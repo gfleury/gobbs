@@ -2,6 +2,7 @@ package pullrequests
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 
@@ -76,7 +77,7 @@ var Create = &cobra.Command{
 
 		response, err := apiClient.DefaultApi.CreatePullRequest(*stashInfo.Project(), *stashInfo.Repo(), pr)
 
-		if response.Response.StatusCode >= http.StatusMultipleChoices {
+		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
 			common.PrintApiError(response.Values)
 		}
 
