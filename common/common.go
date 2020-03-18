@@ -1,6 +1,12 @@
 package common
 
-import "github.com/spf13/viper"
+import (
+	"os"
+
+	"github.com/gfleury/gobbs/common/log"
+
+	"github.com/spf13/viper"
+)
 
 type contextKey string
 
@@ -52,4 +58,24 @@ func Config() *viper.Viper {
 
 func SetConfig(c *viper.Viper) {
 	v = c
+}
+
+func PrintApiError(values map[string]interface{}) {
+	if _, ok := values["errors"]; ok {
+		if errors, ok := values["errors"].([]interface{}); ok {
+			if len(errors) > 0 {
+				if msgs, ok := errors[0].(map[string]interface{}); ok {
+					for idx := range msgs {
+						if _, ok := msgs[idx].(string); ok {
+							log.Critical("%s: %s", idx, msgs[idx])
+						}
+						if _, ok := msgs[idx].(float64); ok {
+							log.Critical("%s: %v", idx, msgs[idx])
+						}
+					}
+				}
+			}
+		}
+	}
+	os.Exit(1)
 }

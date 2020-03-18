@@ -2,6 +2,7 @@ package users
 
 import (
 	"fmt"
+	"net/http"
 	"sort"
 	"time"
 
@@ -36,6 +37,10 @@ var List = &cobra.Command{
 			}
 
 			response, err := apiClient.DefaultApi.GetUsers(opts)
+
+			if response.Response.StatusCode >= http.StatusMultipleChoices {
+				common.PrintApiError(response.Values)
+			}
 			if err != nil {
 				log.Fatal(err.Error())
 			}

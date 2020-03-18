@@ -2,6 +2,7 @@ package repos
 
 import (
 	"fmt"
+	"net/http"
 	"sort"
 
 	"github.com/gfleury/gobbs/common"
@@ -44,6 +45,11 @@ var List = &cobra.Command{
 
 			stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
 			response, err := apiClient.DefaultApi.GetRepositoriesWithOptions(*stashInfo.Project(), opts)
+
+			if response.Response.StatusCode >= http.StatusMultipleChoices {
+				common.PrintApiError(response.Values)
+			}
+
 			if err != nil {
 				log.Fatal(err.Error())
 			}

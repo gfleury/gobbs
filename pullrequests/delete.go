@@ -2,7 +2,6 @@ package pullrequests
 
 import (
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/gfleury/gobbs/common"
@@ -42,18 +41,8 @@ var Delete = &cobra.Command{
 
 		response, err := apiClient.DefaultApi.DeleteWithVersion(*stashInfo.Project(), *stashInfo.Repo(), prID, *prVersion)
 
-		if response.Response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
-			errors := response.Values["errors"].([]interface{})
-			msgs := errors[0].(map[string]interface{})
-			for idx := range msgs {
-				if _, ok := msgs[idx].(string); ok {
-					log.Critical("%s: %s", idx, msgs[idx])
-				}
-				if _, ok := msgs[idx].(float64); ok {
-					log.Critical("%s: %v", idx, msgs[idx])
-				}
-			}
-			os.Exit(1)
+		if response.Response.StatusCode >= http.StatusMultipleChoices {
+			common.PrintApiError(response.Values)
 		}
 
 		if err != nil {

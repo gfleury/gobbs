@@ -77,8 +77,7 @@ var Create = &cobra.Command{
 		response, err := apiClient.DefaultApi.CreatePullRequest(*stashInfo.Project(), *stashInfo.Repo(), pr)
 
 		if response.Response.StatusCode >= http.StatusMultipleChoices {
-			errors := response.Values["errors"].([]interface{})
-			log.Fatal(errors[0].(map[string]interface{})["message"])
+			common.PrintApiError(response.Values)
 		}
 
 		if err != nil {
