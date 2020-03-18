@@ -5,8 +5,6 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
-release:
-  disable: true
 archive:
   replacements:
     darwin: Darwin
