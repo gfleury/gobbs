@@ -1,6 +1,8 @@
 package pullrequests
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -20,29 +22,35 @@ var Info = &cobra.Command{
 	Aliases: []string{"inf"},
 	Short:   "Info pull requests for repository",
 	Args:    cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		prID, err := strconv.Atoi(args[0])
 		if err != nil {
-			log.Fatalf("Argument must be a pull request ID. Err: %s", err.Error())
+			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
+			return err
 		}
 
 		apiClient, cancel, err := common.APIClient(cmd)
 		defer cancel()
 
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
+			return err
 		}
 
 		stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
 
 		response, err := apiClient.DefaultApi.GetPullRequest(*stashInfo.Project(), *stashInfo.Repo(), prID)
 
-		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
+		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) &&
+			!errors.Is(err, context.Canceled) &&
+			!errors.Is(err, context.DeadlineExceeded) &&
+			response.Response != nil &&
+			response.Response.StatusCode >= http.StatusMultipleChoices {
 			common.PrintApiError(response.Values)
-		}
-
-		if err != nil {
-			log.Fatal(err.Error())
+			return err
+		} else if err != nil {
+			log.Critical(err.Error())
+			return err
 		}
 
 		if response.StatusCode == http.StatusNoContent {
@@ -51,7 +59,8 @@ var Info = &cobra.Command{
 
 		pr, err := bitbucketv1.GetPullRequestResponse(response)
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
+			return err
 		}
 
 		// Get Build Status
@@ -59,17 +68,22 @@ var Info = &cobra.Command{
 		defer cancel()
 
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
+			return err
 		}
 
 		response, err = apiClient.DefaultApi.GetCommitBuildStatuses(pr.FromRef.LatestCommit)
 
-		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
+		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) &&
+			!errors.Is(err, context.Canceled) &&
+			!errors.Is(err, context.DeadlineExceeded) &&
+			response.Response != nil &&
+			response.Response.StatusCode >= http.StatusMultipleChoices {
 			common.PrintApiError(response.Values)
-		}
-
-		if err != nil {
-			log.Fatal(err.Error())
+			return err
+		} else if err != nil {
+			log.Critical(err.Error())
+			return err
 		}
 
 		if response.StatusCode == http.StatusNoContent {
@@ -78,7 +92,8 @@ var Info = &cobra.Command{
 
 		buildStatuses, err := bitbucketv1.GetBuildStatusesResponse(response)
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
+			return err
 		}
 
 		header := []string{"ID", "State", "Updated", "Builds", "Tasks Resolv. / Done", "Short Desc.", "Reviewers"}
@@ -116,5 +131,7 @@ var Info = &cobra.Command{
 			}(),
 		})
 		table.Render()
+
+		return nil
 	},
 }

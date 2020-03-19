@@ -1,0 +1,15 @@
+{
+    "user": {
+        "name": "jcitizen",
+        "emailAddress": "jane@example.com",
+        "id": 101,
+        "displayName": "Jane Citizen",
+        "active": true,
+        "slug": "jcitizen",
+        "type": "NORMAL"
+    },
+    "lastReviewedCommit": "7549846524f8aed2bd1c0249993ae1bf9d3c9998",
+    "role": "REVIEWER",
+    "approved": true,
+    "status": "APPROVED"
+}

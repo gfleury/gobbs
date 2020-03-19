@@ -1,6 +1,8 @@
 package pullrequests
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -28,12 +30,13 @@ var Create = &cobra.Command{
 	Aliases: []string{"cr"},
 	Short:   "Create pull requests for repository",
 	Args:    cobra.MinimumNArgs(2),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		apiClient, cancel, err := common.APIClient(cmd)
 		defer cancel()
 
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Critical(err.Error())
+			return err
 		}
 
 		stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
@@ -77,17 +80,22 @@ var Create = &cobra.Command{
 
 		response, err := apiClient.DefaultApi.CreatePullRequest(*stashInfo.Project(), *stashInfo.Repo(), pr)
 
-		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
+		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) &&
+			!errors.Is(err, context.Canceled) &&
+			!errors.Is(err, context.DeadlineExceeded) &&
+			response.Response != nil &&
+			response.Response.StatusCode >= http.StatusMultipleChoices {
 			common.PrintApiError(response.Values)
-		}
-
-		if err != nil {
-			log.Fatal(err.Error())
+			return err
+		} else if err != nil {
+			log.Critical(err.Error())
+			return err
 		}
 
 		pr, err = bitbucketv1.GetPullRequestResponse(response)
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Critical(err.Error())
+			return err
 		}
 
 		header := []string{"ID", "State", "Created", "Short Desc.", "Reviewers"}
@@ -113,6 +121,8 @@ var Create = &cobra.Command{
 			}(),
 		})
 		table.Render()
+
+		return nil
 	},
 }
 

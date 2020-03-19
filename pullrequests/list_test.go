@@ -70,7 +70,7 @@ func (s *S) closeMockStdout() {
 func (s *S) TestListInvalidHost(c *check.C) {
 	*s.host = "http://localhost:7992"
 
-	os.Args = []string{"users", "list"}
+	os.Args = []string{"pr", "list"}
 
 	ctx := common.APIClientContext(&s.stashInfo)
 	err := List.ExecuteContext(ctx)
@@ -80,7 +80,7 @@ func (s *S) TestListInvalidHost(c *check.C) {
 func (s *S) TestListInvalidHostTimeouted(c *check.C) {
 	*s.host = "http://localhost:7992"
 
-	os.Args = []string{"users", "list"}
+	os.Args = []string{"pr", "list"}
 
 	*s.stashInfo.Timeout() = 0
 
