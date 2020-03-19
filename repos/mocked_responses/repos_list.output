@@ -1,0 +1,9 @@
+/rest/api/1.0/projects/{projectKey}/repos
+GetRepositories
++----+---------+------------------------------------------+-----------+
+| ID |  SLUG   |                  LINKS                   |  STATUS   |
++----+---------+------------------------------------------+-----------+
+|  1 | my-repo | ssh: ssh://git@<baseURL>/PRJ/my-repo.git | Available |
+|    |         | http:                                    |           |
+|    |         | https://<baseURL>/scm/PRJ/my-repo.git    |           |
++----+---------+------------------------------------------+-----------+

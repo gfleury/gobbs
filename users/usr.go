@@ -1,6 +1,10 @@
 package users
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
 
 func init() {
 	UserRoot.AddCommand(List)
@@ -13,9 +17,10 @@ var UserRoot = &cobra.Command{
 	Aliases: []string{"us"},
 	Short:   "Interact with users",
 	Args:    cobra.MinimumNArgs(0),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			List.Run(cmd, args)
+			return List.RunE(cmd, args)
 		}
+		return fmt.Errorf("Commnand not found")
 	},
 }

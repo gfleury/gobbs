@@ -1,6 +1,8 @@
 package users
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -20,7 +22,7 @@ var List = &cobra.Command{
 	Aliases: []string{"ls"},
 	Short:   "List users",
 	Args:    cobra.MinimumNArgs(0),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		var users []bitbucketv1.User
 
 		opts := map[string]interface{}{
@@ -34,21 +36,28 @@ var List = &cobra.Command{
 			defer cancel()
 
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Critical(err.Error())
+				return err
 			}
 
 			response, err := apiClient.DefaultApi.GetUsers(opts)
 
-			if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
+			if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) &&
+				!errors.Is(err, context.Canceled) &&
+				!errors.Is(err, context.DeadlineExceeded) &&
+				response.Response != nil &&
+				response.Response.StatusCode >= http.StatusMultipleChoices {
 				common.PrintApiError(response.Values)
-			}
-			if err != nil {
-				log.Fatal(err.Error())
+				return err
+			} else if err != nil {
+				log.Critical(err.Error())
+				return err
 			}
 
 			pagedUsers, err := bitbucketv1.GetUsersResponse(response)
 			if err != nil {
-				log.Fatal(err.Error())
+				log.Critical(err.Error())
+				return err
 			}
 			users = append(users, pagedUsers...)
 
@@ -75,5 +84,7 @@ var List = &cobra.Command{
 			})
 		}
 		table.Render()
+
+		return nil
 	},
 }

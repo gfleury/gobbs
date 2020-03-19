@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318195912-d6c940c1671f
+	github.com/gfleury/go-bitbucket-v1/test/bb-mock-server v0.0.0-20200318195912-d6c940c1671f
 	github.com/golang/protobuf v1.3.5 // indirect
 	github.com/kataras/tablewriter v0.0.0-20180708051242-e063d29b7c23
 	github.com/kr/text v0.2.0 // indirect

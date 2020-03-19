@@ -1,8 +1,6 @@
 package common
 
 import (
-	"os"
-
 	"github.com/gfleury/gobbs/common/log"
 
 	"github.com/spf13/viper"
@@ -77,5 +75,4 @@ func PrintApiError(values map[string]interface{}) {
 			}
 		}
 	}
-	os.Exit(1)
 }
