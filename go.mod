@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318195912-d6c940c1671f
+	github.com/gfleury/go-bitbucket-v1 v0.0.0-20200319223517-f39983767697
 	github.com/gfleury/go-bitbucket-v1/test/bb-mock-server v0.0.0-20200318195912-d6c940c1671f
 	github.com/golang/protobuf v1.3.5 // indirect
 	github.com/kataras/tablewriter v0.0.0-20180708051242-e063d29b7c23
@@ -12,6 +12,7 @@ require (
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mitchellh/mapstructure v1.2.1 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

@@ -48,6 +48,12 @@ github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318140919-ffb767fdb883 h1:1YLSEZq
 github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318140919-ffb767fdb883/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
 github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318195912-d6c940c1671f h1:iW/R+WKgi2OTY1hs407KMtAqwL7AznEwA2p06lFVz6w=
 github.com/gfleury/go-bitbucket-v1 v0.0.0-20200318195912-d6c940c1671f/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200319220206-defacfd94cb7 h1:weYDKGyX++Mfs3Q7O6ZiNrKapmaJQO9ZoaqkaNGvKVg=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200319220206-defacfd94cb7/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200319220536-c269de5f9f7a h1:Oq3NDpJID7uuDLioI3s/W+Yi5bt9SEVLuA3wNgDL3Gg=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200319220536-c269de5f9f7a/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200319223517-f39983767697 h1:O2pMobemaY1fI/2W3QbqLwouNwkJmtjpvRNjp3FOXeM=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200319223517-f39983767697/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
 github.com/gfleury/go-bitbucket-v1/test/bb-mock-server v0.0.0-20200318195912-d6c940c1671f h1:sFDa4seU6JyhIm6WZNoO61uqB9Dg98ODZOPP3x9FPp8=
 github.com/gfleury/go-bitbucket-v1/test/bb-mock-server v0.0.0-20200318195912-d6c940c1671f/go.mod h1:VssB0kb1cETNaFFC/0mHVCj+7i5TS2xraYq+tl9JLwE=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
@@ -133,6 +139,8 @@ github.com/mitchellh/go-homedir v1.1.0 h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG
 github.com/mitchellh/go-homedir v1.1.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQzvN1EDeE=
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
+github.com/mitchellh/mapstructure v1.2.1 h1:pSevhhKCEjOuZHQWDBYAHxcimg60m1fGFj6atY7zAdE=
+github.com/mitchellh/mapstructure v1.2.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
