@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/gfleury/gobbs.svg?branch=master)](https://travis-ci.org/gfleury/gobbs)
 [![GoDoc](https://godoc.org/github.com/gfleury/gobbs?status.svg)](https://godoc.org/github.com/gfleury/gobbs)
+ [![codecov](https://codecov.io/gh/gfleury/gobbs/branch/master/graph/badge.svg)](https://codecov.io/gh/gfleury/gobbs)
 
 Simple command line client for Atlassian's Bitbucket Server (former stash) service written in Go.
 
