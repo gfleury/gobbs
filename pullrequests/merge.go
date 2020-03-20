@@ -21,7 +21,7 @@ var (
 )
 
 func init() {
-	prVersionMerge = Delete.Flags().Int32P("merge", "m", 0, "Define version of PR to merge (Modified PR's increase version)")
+	prVersionMerge = Merge.Flags().Int32P("merge", "m", 0, "Define version of PR to merge (Modified PR's increase version)")
 }
 
 // Merge is the cmd implementation for Merging Pull Requests
@@ -30,6 +30,7 @@ var Merge = &cobra.Command{
 	Aliases: []string{"mer"},
 	Short:   "Merge pull requests for repository",
 	Args:    cobra.MinimumNArgs(1),
+	PreRunE: mustHaveProjectRepo,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		prID, err := strconv.Atoi(args[0])
 		if err != nil {

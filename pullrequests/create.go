@@ -30,6 +30,7 @@ var Create = &cobra.Command{
 	Aliases: []string{"cr"},
 	Short:   "Create pull requests for repository",
 	Args:    cobra.MinimumNArgs(2),
+	PreRunE: mustHaveProjectRepo,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		apiClient, cancel, err := common.APIClient(cmd)
 		defer cancel()

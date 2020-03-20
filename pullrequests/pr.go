@@ -3,6 +3,8 @@ package pullrequests
 import (
 	"fmt"
 
+	"github.com/gfleury/gobbs/common"
+
 	"github.com/spf13/cobra"
 )
 
@@ -27,4 +29,14 @@ var PullRequestRoot = &cobra.Command{
 		}
 		return fmt.Errorf("Commnand not found")
 	},
+}
+
+func mustHaveProjectRepo(cmd *cobra.Command, args []string) error {
+	stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
+
+	if *stashInfo.Repo() == "" ||
+		*stashInfo.Project() == "" {
+		return fmt.Errorf("Unable to identify Project and Repository")
+	}
+	return nil
 }

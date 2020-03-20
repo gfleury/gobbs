@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -27,8 +28,17 @@ func APIClient(cmd *cobra.Command) (client *bitbucketv1.APIClient, cancel contex
 	ctx, cancel = context.WithTimeout(ctx, time.Duration(*stashInfo.Timeout())*time.Second)
 
 	if stashInfo.host == "" || stashInfo.project == "" || stashInfo.repo == "" {
-		host, project, repo, gitErr := GitInfo()
-		if stashInfo.host == "" {
+		host, project, repo, _ := GitInfo()
+		if stashInfo.host == "" && host == "" {
+			keys := Config().AllKeys()
+			sort.Strings(keys)
+			for _, key := range keys {
+				if !strings.HasPrefix(key, "password_method") {
+					stashInfo.host = strings.Split(key, "::")[0]
+					break
+				}
+			}
+		} else if stashInfo.host == "" {
 			stashInfo.host = host
 		}
 		if stashInfo.project == "" {
@@ -42,7 +52,9 @@ func APIClient(cmd *cobra.Command) (client *bitbucketv1.APIClient, cancel contex
 			!strings.HasPrefix(stashInfo.host, "http://") {
 			stashInfo.host = fmt.Sprintf("https://%s", stashInfo.host)
 		}
-		err = gitErr
+		if stashInfo.host == "" {
+			err = fmt.Errorf("Unable to autodetect Stash host/url. Please inform with -H flag")
+		}
 	}
 
 	basicAuth := bitbucketv1.BasicAuth{UserName: stashInfo.Credential().GetUser(stashInfo.host), Password: stashInfo.Credential().GetPasswd()}

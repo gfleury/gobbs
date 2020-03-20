@@ -21,6 +21,7 @@ var Approve = &cobra.Command{
 	Aliases: []string{"app"},
 	Short:   "Approve pull requests for repository",
 	Args:    cobra.MinimumNArgs(1),
+	PreRunE: mustHaveProjectRepo,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		prID, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {

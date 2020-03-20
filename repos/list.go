@@ -29,6 +29,7 @@ var List = &cobra.Command{
 	Aliases: []string{"ls"},
 	Short:   "List repositories",
 	Args:    cobra.MinimumNArgs(0),
+	PreRunE: mustHaveProject,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var repos []bitbucketv1.Repository
 

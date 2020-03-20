@@ -56,7 +56,7 @@ func (c *Credential) GetUser(host string) string {
 			if bin, err := exec.LookPath(binary); err == nil {
 				log.Debugf("found gopass at: %s", bin)
 				buf := bytes.NewBufferString("")
-				cmd := exec.Command(bin, "show", "-o", fmt.Sprintf("%s/%s", AppName, strings.Replace(host, "://", "-", -1)))
+				cmd := exec.Command(bin, "show", "-o", fmt.Sprintf("%s/%s", AppName, normalizeGoPassKey(host)))
 				cmd.Stdout = buf
 				cmd.Stderr = os.Stderr
 				if err := cmd.Run(); err == nil {
@@ -105,13 +105,14 @@ func (c *Credential) GetPasswd() string {
 		if err != nil {
 			log.Fatalf("%s", err.Error())
 		}
+		c.new = true
 	}
 	return c.passwd
 }
 
 func SavePasswdExternal(host, passwd string) error {
 	if Config().GetString("password_method") == "gopass" {
-		log.Debugf("Saving gopass password source.")
+		log.Debugf("Saving gopass password source for host %s", host)
 
 		if passDir := Config().GetString("password_storage"); passDir != "" {
 			orig := os.Getenv("PASSWORD_STORE_DIR")
@@ -126,7 +127,7 @@ func SavePasswdExternal(host, passwd string) error {
 			log.Debugf("found gopass at: %s", bin)
 			buf := bytes.NewBufferString("")
 			stdin := bytes.NewBufferString(passwd)
-			cmd := exec.Command(bin, "insert", "-f", fmt.Sprintf("%s/%s", AppName, strings.Replace(host, "://", "-", -1)))
+			cmd := exec.Command(bin, "insert", "-f", fmt.Sprintf("%s/%s", AppName, normalizeGoPassKey(host)))
 			cmd.Stdin = stdin
 			cmd.Stdout = buf
 			cmd.Stderr = os.Stderr
@@ -138,4 +139,10 @@ func SavePasswdExternal(host, passwd string) error {
 		}
 	}
 	return nil
+}
+
+func normalizeGoPassKey(key string) string {
+	normalized := strings.Replace(key, "://", "-", -1)
+	normalized = strings.Replace(normalized, ":", "#", -1)
+	return normalized
 }

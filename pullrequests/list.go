@@ -30,6 +30,7 @@ var List = &cobra.Command{
 	Aliases: []string{"ls"},
 	Short:   "List pull requests for repository",
 	Args:    cobra.MinimumNArgs(0),
+	PreRunE: mustHaveProjectRepo,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var prs []bitbucketv1.PullRequest
 

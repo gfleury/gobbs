@@ -65,3 +65,8 @@ localhost:
 	passwd := cred.GetPasswd()
 	c.Assert(passwd, check.Equals, "show -o gobbs/localhost")
 }
+
+func (s *S) TestNormalizeGoPassKey(c *check.C) {
+	key := normalizeGoPassKey("https://www.google.com.br:443/")
+	c.Assert(key, check.Equals, "https-www.google.com.br#443/")
+}

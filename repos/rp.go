@@ -3,6 +3,7 @@ package repos
 import (
 	"fmt"
 
+	"github.com/gfleury/gobbs/common"
 	"github.com/spf13/cobra"
 )
 
@@ -23,4 +24,13 @@ var ReposRoot = &cobra.Command{
 		}
 		return fmt.Errorf("Commnand not found")
 	},
+}
+
+func mustHaveProject(cmd *cobra.Command, args []string) error {
+	stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
+
+	if *stashInfo.Project() == "" {
+		return fmt.Errorf("Unable to identify Project")
+	}
+	return nil
 }
