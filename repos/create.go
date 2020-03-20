@@ -20,7 +20,7 @@ var (
 
 func init() {
 	forkable = Create.Flags().BoolP("forkable", "f", true, "Is repository forkable")
-	private = Create.Flags().BoolP("private", "p", false, "Is repository private")
+	private = Create.Flags().BoolP("private", "j", false, "Is repository private")
 }
 
 // Create is the cmd implementation for Creating Pull Requests
