@@ -36,7 +36,7 @@ var List = &cobra.Command{
 			defer cancel()
 
 			if err != nil {
-				log.Critical(err.Error())
+				cmd.SilenceUsage = true
 				return err
 			}
 
@@ -48,15 +48,17 @@ var List = &cobra.Command{
 				response != nil && response.Response != nil &&
 				response.Response.StatusCode >= http.StatusMultipleChoices {
 				common.PrintApiError(response.Values)
-				return err
+				cmd.SilenceUsage = true
+				log.Debugf(err.Error())
+				return fmt.Errorf("Unable to process request, API Error")
 			} else if err != nil {
-				log.Critical(err.Error())
+				cmd.SilenceUsage = true
 				return err
 			}
 
 			pagedUsers, err := bitbucketv1.GetUsersResponse(response)
 			if err != nil {
-				log.Critical(err.Error())
+				cmd.SilenceUsage = true
 				return err
 			}
 			users = append(users, pagedUsers...)

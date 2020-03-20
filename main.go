@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/gfleury/gobbs/cmd"
 	"github.com/gfleury/gobbs/common/log"
 )
@@ -11,7 +13,7 @@ func main() {
 
 	err := cmd.Execute()
 	if err != nil {
-		log.Fatal(err.Error())
+		os.Exit(1)
 	}
 
 }

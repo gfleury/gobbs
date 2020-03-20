@@ -45,24 +45,71 @@ https://github.com:
 	os.Args = savedArgs
 }
 
-func (s *S) TestAPIClientWithArguments(c *check.C) {
-	os.args = []string{"-H", "localhost"}
+func (s *S) TestAPIClientWithHost(c *check.C) {
+	os.Args = []string{"help"}
+	Config().SetConfigType("yaml")
+	var yamlExample = []byte(`
+https://localhost:
+  user: gfleury
+  passwd: 123
+`)
+	err := Config().ReadConfig(bytes.NewBuffer(yamlExample))
+	c.Assert(err, check.IsNil)
 
 	a := cobra.Command{
 		Run: func(cmd *cobra.Command, args []string) {
-			stashInfo := cmd.Context().Value(StashInfoKey).(*common.StashInfo)
-			c.Assert(stashInfo.host, check.Equals, "localhost")
 		},
 	}
-	ctx := APIClientContext(&StashInfo{})
+	si := StashInfo{
+		host: "localhost",
+	}
+	ctx := APIClientContext(&si)
 
-	err := a.ExecuteContext(ctx)
+	err = a.ExecuteContext(ctx)
 	c.Assert(err, check.IsNil)
 
 	err = os.Chdir("..")
 	c.Assert(err, check.IsNil)
-	api, cancel, err := APIClient(&a)
+	_, cancel, err := APIClient(&a)
 	defer cancel()
 	c.Assert(err, check.IsNil)
+
+	c.Assert(si.host, check.Equals, "https://localhost")
 	err = os.Chdir("common")
+	c.Assert(err, check.IsNil)
+}
+
+func (s *S) TestAPIClientWithArguments(c *check.C) {
+	os.Args = []string{"help"}
+	Config().SetConfigType("yaml")
+	var yamlExample = []byte(`
+http://localhost:
+  user: gfleury
+  passwd: 123
+`)
+	err := Config().ReadConfig(bytes.NewBuffer(yamlExample))
+	c.Assert(err, check.IsNil)
+
+	a := cobra.Command{
+		Run: func(cmd *cobra.Command, args []string) {
+
+		},
+	}
+	si := StashInfo{
+		host: "http://localhost",
+	}
+	ctx := APIClientContext(&si)
+
+	err = a.ExecuteContext(ctx)
+	c.Assert(err, check.IsNil)
+
+	err = os.Chdir("..")
+	c.Assert(err, check.IsNil)
+	_, cancel, err := APIClient(&a)
+	defer cancel()
+	c.Assert(err, check.IsNil)
+
+	c.Assert(si.host, check.Equals, "http://localhost")
+	err = os.Chdir("common")
+	c.Assert(err, check.IsNil)
 }

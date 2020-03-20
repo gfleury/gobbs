@@ -38,8 +38,8 @@ func APIClient(cmd *cobra.Command) (client *bitbucketv1.APIClient, cancel contex
 			stashInfo.repo = repo
 		}
 
-		if !strings.HasPrefix("https://", stashInfo.host) &&
-			!strings.HasPrefix("http://", stashInfo.host) {
+		if !strings.HasPrefix(stashInfo.host, "https://") &&
+			!strings.HasPrefix(stashInfo.host, "http://") {
 			stashInfo.host = fmt.Sprintf("https://%s", stashInfo.host)
 		}
 		err = gitErr

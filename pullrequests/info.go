@@ -49,7 +49,7 @@ var Info = &cobra.Command{
 			common.PrintApiError(response.Values)
 			return err
 		} else if err != nil {
-			log.Critical(err.Error())
+			cmd.SilenceUsage = true
 			return err
 		}
 
@@ -80,9 +80,11 @@ var Info = &cobra.Command{
 			response != nil && response.Response != nil &&
 			response.Response.StatusCode >= http.StatusMultipleChoices {
 			common.PrintApiError(response.Values)
-			return err
+			cmd.SilenceUsage = true
+			log.Debugf(err.Error())
+			return fmt.Errorf("Unable to process request, API Error")
 		} else if err != nil {
-			log.Critical(err.Error())
+			cmd.SilenceUsage = true
 			return err
 		}
 
