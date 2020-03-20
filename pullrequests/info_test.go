@@ -1,6 +1,7 @@
 package pullrequests
 
 import (
+	"io/ioutil"
 	"os"
 
 	"github.com/gfleury/gobbs/common"
@@ -31,24 +32,24 @@ func (s *S) TestInfoInvalidHostTimeouted(c *check.C) {
 	*s.stashInfo.Timeout() = 2
 }
 
-// func (s *S) TestInfoValidHost(c *check.C) {
-// 	*s.host = "http://localhost:7993"
+func (s *S) TestInfoValidHost(c *check.C) {
+	*s.host = "http://localhost:7993"
 
-// 	os.Args = []string{"pr", "info", "21"}
+	os.Args = []string{"pr", "info", "21"}
 
-// 	s.mockStdout()
+	s.mockStdout()
 
-// 	ctx := common.APIClientContext(&s.stashInfo)
-// 	err := Info.ExecuteContext(ctx)
-// 	c.Assert(err, check.IsNil)
+	ctx := common.APIClientContext(&s.stashInfo)
+	err := Info.ExecuteContext(ctx)
+	c.Assert(err, check.IsNil)
 
-// 	s.closeMockStdout()
+	s.closeMockStdout()
 
-// 	got, err := ioutil.ReadAll(s.readStdout)
-// 	c.Assert(err, check.IsNil)
+	got, err := ioutil.ReadAll(s.readStdout)
+	c.Assert(err, check.IsNil)
 
-// 	want, err := ioutil.ReadFile("mocked_responses/pullrequests_info.output")
-// 	c.Assert(err, check.IsNil)
+	want, err := ioutil.ReadFile("mocked_responses/pullrequests_info.output")
+	c.Assert(err, check.IsNil)
 
-// 	c.Assert(string(got), check.Equals, string(want))
-// }
+	c.Assert(string(got), check.Equals, string(want))
+}

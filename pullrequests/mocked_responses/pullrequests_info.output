@@ -1,0 +1,12 @@
+/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}
+Get
+/rest/build-status/1.0/commits/{commitId}
+GetCommitStatus
++-----+-------+--------------------------+--------------------------------------------------+----------------------+----------------------+--------------+
+| ID  | STATE |         UPDATED          |                      BUILDS                      | TASKS RESOLV  / DONE |      SHORT DESC      |  REVIEWERS   |
++-----+-------+--------------------------+--------------------------------------------------+----------------------+----------------------+--------------+
+| 101 | OPEN  | 1970-01-16T17:31:25+0000 | Name: REPO-MASTER-42 	State: SUCCESSFUL 	URL:      | 0 / 0                | [ -> ] Talking Nerdy | jcitizen (A) |
+|     |       |                          | https://bamboo.example.com/browse/REPO-MASTER-42 |                      |                      |              |
+|     |       |                          | 	Desc.:  Changes by John Doe 	Added:               |                      |                      |              |
+|     |       |                          | 2020-03-09T00:24:02+0000                         |                      |                      |              |
++-----+-------+--------------------------+--------------------------------------------------+----------------------+----------------------+--------------+

@@ -93,7 +93,7 @@ func (s *S) TestListInvalidHostTimeouted(c *check.C) {
 func (s *S) TestListValidHost(c *check.C) {
 	*s.host = "http://localhost:7993"
 
-	os.Args = []string{"users", "list"}
+	os.Args = []string{"pr", "list"}
 
 	s.mockStdout()
 

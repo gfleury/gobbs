@@ -44,3 +44,25 @@ https://github.com:
 	c.Assert(api, check.NotNil)
 	os.Args = savedArgs
 }
+
+func (s *S) TestAPIClientWithArguments(c *check.C) {
+	os.args = []string{"-H", "localhost"}
+
+	a := cobra.Command{
+		Run: func(cmd *cobra.Command, args []string) {
+			stashInfo := cmd.Context().Value(StashInfoKey).(*common.StashInfo)
+			c.Assert(stashInfo.host, check.Equals, "localhost")
+		},
+	}
+	ctx := APIClientContext(&StashInfo{})
+
+	err := a.ExecuteContext(ctx)
+	c.Assert(err, check.IsNil)
+
+	err = os.Chdir("..")
+	c.Assert(err, check.IsNil)
+	api, cancel, err := APIClient(&a)
+	defer cancel()
+	c.Assert(err, check.IsNil)
+	err = os.Chdir("common")
+}

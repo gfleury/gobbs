@@ -54,7 +54,7 @@ var List = &cobra.Command{
 			if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) &&
 				!errors.Is(err, context.Canceled) &&
 				!errors.Is(err, context.DeadlineExceeded) &&
-				response.Response != nil &&
+				response != nil && response.Response != nil &&
 				response.Response.StatusCode >= http.StatusMultipleChoices {
 				common.PrintApiError(response.Values)
 				return err

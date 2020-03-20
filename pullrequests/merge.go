@@ -1,6 +1,8 @@
 package pullrequests
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -28,17 +30,19 @@ var Merge = &cobra.Command{
 	Aliases: []string{"mer"},
 	Short:   "Merge pull requests for repository",
 	Args:    cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		prID, err := strconv.Atoi(args[0])
 		if err != nil {
-			log.Fatalf("Argument must be a pull request ID. Err: %s", err.Error())
+			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
+			return err
 		}
 
 		apiClient, cancel, err := common.APIClient(cmd)
 		defer cancel()
 
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
+			return err
 		}
 
 		stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
@@ -49,12 +53,16 @@ var Merge = &cobra.Command{
 
 		response, err := apiClient.DefaultApi.Merge(*stashInfo.Project(), *stashInfo.Repo(), prID, opts, nil, []string{"application/json"})
 
-		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) && response != nil && response.Response.StatusCode >= http.StatusMultipleChoices {
+		if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) &&
+			!errors.Is(err, context.Canceled) &&
+			!errors.Is(err, context.DeadlineExceeded) &&
+			response != nil && response.Response != nil &&
+			response.Response.StatusCode >= http.StatusMultipleChoices {
 			common.PrintApiError(response.Values)
-		}
-
-		if err != nil {
-			log.Fatal(err.Error())
+			return err
+		} else if err != nil {
+			log.Critical(err.Error())
+			return err
 		}
 
 		if response.StatusCode == http.StatusNoContent {
@@ -63,7 +71,8 @@ var Merge = &cobra.Command{
 
 		pr, err := bitbucketv1.GetPullRequestResponse(response)
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
+			return err
 		}
 
 		header := []string{"ID", "State", "Updated", "Result", "Tasks Resolv. / Done", "Short Desc.", "Reviewers"}
@@ -90,5 +99,7 @@ var Merge = &cobra.Command{
 			}(),
 		})
 		table.Render()
+
+		return nil
 	},
 }

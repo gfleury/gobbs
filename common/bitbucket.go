@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	bitbucketv1 "github.com/gfleury/go-bitbucket-v1"
@@ -36,7 +37,11 @@ func APIClient(cmd *cobra.Command) (client *bitbucketv1.APIClient, cancel contex
 		if stashInfo.repo == "" {
 			stashInfo.repo = repo
 		}
-		stashInfo.host = fmt.Sprintf("https://%s", stashInfo.host)
+
+		if !strings.HasPrefix("https://", stashInfo.host) &&
+			!strings.HasPrefix("http://", stashInfo.host) {
+			stashInfo.host = fmt.Sprintf("https://%s", stashInfo.host)
+		}
 		err = gitErr
 	}
 

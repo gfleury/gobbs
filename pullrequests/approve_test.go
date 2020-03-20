@@ -12,7 +12,7 @@ import (
 func (s *S) TestApproveInvalidHost(c *check.C) {
 	*s.host = "http://localhost:7992"
 
-	os.Args = []string{"users", "approve", "2"}
+	os.Args = []string{"pr", "approve", "2"}
 
 	ctx := common.APIClientContext(&s.stashInfo)
 	err := Approve.ExecuteContext(ctx)
@@ -22,7 +22,7 @@ func (s *S) TestApproveInvalidHost(c *check.C) {
 func (s *S) TestApproveInvalidHostTimeouted(c *check.C) {
 	*s.host = "http://localhost:7992"
 
-	os.Args = []string{"users", "approve", "2"}
+	os.Args = []string{"pr", "approve", "2"}
 
 	*s.stashInfo.Timeout() = 0
 
@@ -35,7 +35,7 @@ func (s *S) TestApproveInvalidHostTimeouted(c *check.C) {
 func (s *S) TestApproveValidHost(c *check.C) {
 	*s.host = "http://localhost:7993"
 
-	os.Args = []string{"users", "approve", "2"}
+	os.Args = []string{"pr", "approve", "2"}
 
 	s.mockStdout()
 
