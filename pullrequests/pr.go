@@ -15,6 +15,7 @@ func init() {
 	PullRequestRoot.AddCommand(Approve)
 	PullRequestRoot.AddCommand(Merge)
 	PullRequestRoot.AddCommand(Info)
+	PullRequestRoot.AddCommand(Diff)
 }
 
 // PullRequestRoot cmd root for cobra
