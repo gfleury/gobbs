@@ -22,7 +22,6 @@ var Info = &cobra.Command{
 	Aliases: []string{"inf"},
 	Short:   "Info pull requests for repository",
 	Args:    cobra.MinimumNArgs(1),
-	PreRunE: mustHaveProjectRepo,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		prID, err := strconv.Atoi(args[0])
 		if err != nil {
@@ -39,6 +38,10 @@ var Info = &cobra.Command{
 		}
 
 		stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
+		err = mustHaveProjectRepo(stashInfo)
+		if err != nil {
+			return err
+		}
 
 		response, err := apiClient.DefaultApi.GetPullRequest(*stashInfo.Project(), *stashInfo.Repo(), prID)
 

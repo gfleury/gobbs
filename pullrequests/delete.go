@@ -28,7 +28,6 @@ var Delete = &cobra.Command{
 	Aliases: []string{"del"},
 	Short:   "Delete pull requests for repository",
 	Args:    cobra.MinimumNArgs(1),
-	PreRunE: mustHaveProjectRepo,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		prID, err := strconv.ParseInt(args[0], 10, 64)
 		if err != nil {
@@ -45,6 +44,10 @@ var Delete = &cobra.Command{
 		}
 
 		stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
+		err = mustHaveProjectRepo(stashInfo)
+		if err != nil {
+			return err
+		}
 
 		response, err := apiClient.DefaultApi.DeleteWithVersion(*stashInfo.Project(), *stashInfo.Repo(), prID, *prVersion)
 

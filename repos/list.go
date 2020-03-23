@@ -29,7 +29,6 @@ var List = &cobra.Command{
 	Aliases: []string{"ls"},
 	Short:   "List repositories",
 	Args:    cobra.MinimumNArgs(0),
-	PreRunE: mustHaveProject,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var repos []bitbucketv1.Repository
 
@@ -49,6 +48,11 @@ var List = &cobra.Command{
 			}
 
 			stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
+			err = mustHaveProject(stashInfo)
+			if err != nil {
+				return err
+			}
+
 			response, err := apiClient.DefaultApi.GetRepositoriesWithOptions(*stashInfo.Project(), opts)
 
 			if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) &&

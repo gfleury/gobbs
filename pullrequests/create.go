@@ -30,7 +30,6 @@ var Create = &cobra.Command{
 	Aliases: []string{"cr"},
 	Short:   "Create pull requests for repository",
 	Args:    cobra.MinimumNArgs(2),
-	PreRunE: mustHaveProjectRepo,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		apiClient, cancel, err := common.APIClient(cmd)
 		defer cancel()
@@ -41,6 +40,10 @@ var Create = &cobra.Command{
 		}
 
 		stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
+		err = mustHaveProjectRepo(stashInfo)
+		if err != nil {
+			return err
+		}
 
 		if *title == "" {
 			*title = titleFromBranch(args[0], args[1])

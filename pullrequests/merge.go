@@ -30,7 +30,6 @@ var Merge = &cobra.Command{
 	Aliases: []string{"mer"},
 	Short:   "Merge pull requests for repository",
 	Args:    cobra.MinimumNArgs(1),
-	PreRunE: mustHaveProjectRepo,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		prID, err := strconv.Atoi(args[0])
 		if err != nil {
@@ -47,6 +46,10 @@ var Merge = &cobra.Command{
 		}
 
 		stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
+		err = mustHaveProjectRepo(stashInfo)
+		if err != nil {
+			return err
+		}
 
 		opts := map[string]interface{}{
 			"version": *prVersionMerge,

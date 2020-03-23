@@ -26,9 +26,7 @@ var ReposRoot = &cobra.Command{
 	},
 }
 
-func mustHaveProject(cmd *cobra.Command, args []string) error {
-	stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
-
+func mustHaveProject(stashInfo *common.StashInfo) error {
 	if *stashInfo.Project() == "" {
 		return fmt.Errorf("Unable to identify Project")
 	}
