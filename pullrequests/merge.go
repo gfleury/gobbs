@@ -16,14 +16,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	prVersionMerge *int32
-)
-
-func init() {
-	prVersionMerge = Merge.Flags().Int32P("merge", "m", 0, "Define version of PR to merge (Modified PR's increase version)")
-}
-
 // Merge is the cmd implementation for Merging Pull Requests
 var Merge = &cobra.Command{
 	Use:     "merge pullRequestID",
@@ -52,7 +44,7 @@ var Merge = &cobra.Command{
 		}
 
 		opts := map[string]interface{}{
-			"version": *prVersionMerge,
+			"version": int32(*prVersion),
 		}
 
 		response, err := apiClient.DefaultApi.Merge(*stashInfo.Project(), *stashInfo.Repo(), prID, opts, nil, []string{"application/json"})

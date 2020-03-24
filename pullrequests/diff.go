@@ -25,6 +25,12 @@ const (
 	ResetColor = "\033[0m"
 )
 
+var diffContextLines *int32
+
+func init() {
+	diffContextLines = Diff.Flags().Int32P("lines", "L", 3, "Diff context lines (how many lines before/after)")
+}
+
 // Digg is the cmd implementation for getting Raw diff of PullRequests
 var Diff = &cobra.Command{
 	Use:     "diff pullRequestID",

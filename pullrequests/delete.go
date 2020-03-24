@@ -14,14 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	prVersion *int64
-)
-
-func init() {
-	prVersion = Delete.Flags().Int64P("version", "V", 0, "Define version of PR to delete (Modified PR's increase version)")
-}
-
 // Delete is the cmd implementation for Deleting Pull Requests
 var Delete = &cobra.Command{
 	Use:     "delete pullRequestID",

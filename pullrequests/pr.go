@@ -8,7 +8,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	prVersion *int64
+)
+
 func init() {
+	prVersion = PullRequestRoot.Flags().Int64P("version", "V", 0, "Define version of PR to delete (Modified PR's increase version)")
+
 	PullRequestRoot.AddCommand(List)
 	PullRequestRoot.AddCommand(Create)
 	PullRequestRoot.AddCommand(Delete)
