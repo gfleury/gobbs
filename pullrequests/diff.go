@@ -17,18 +17,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	WhiteColor = "\033[1;97m"
-	GreenColor = "\033[0;32m"
-	RedColor   = "\033[0;31m"
-	CyanColor  = "\033[0;36m"
-	ResetColor = "\033[0m"
+var (
+	WhiteColor       = "\033[1;97m"
+	GreenColor       = "\033[0;32m"
+	RedColor         = "\033[0;31m"
+	CyanColor        = "\033[0;36m"
+	ResetColor       = "\033[0m"
+	diffContextLines *int32
+	noColor          *bool
 )
-
-var diffContextLines *int32
 
 func init() {
 	diffContextLines = Diff.Flags().Int32P("lines", "L", 3, "Diff context lines (how many lines before/after)")
+	noColor = Diff.Flags().BoolP("nocolor", "N", false, "Disable color output (getting a working diff)")
 }
 
 // Digg is the cmd implementation for getting Raw diff of PullRequests
@@ -48,8 +49,15 @@ var Diff = &cobra.Command{
 		defer cancel()
 
 		if err != nil {
-			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
 			return err
+		}
+
+		if *noColor {
+			WhiteColor = ""
+			GreenColor = ""
+			RedColor = ""
+			CyanColor = ""
+			ResetColor = ""
 		}
 
 		stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
@@ -83,7 +91,7 @@ var Diff = &cobra.Command{
 			return err
 		}
 
-		less := exec.Command("less", "-R")
+		less := exec.Command("less", "-r")
 
 		stdin, err := less.StdinPipe()
 		if err != nil {

@@ -97,15 +97,15 @@
                     }
                 }
             ],
-            "truncated": "true",
-            "contextLines": "10",
+            "truncated": true,
+            "contextLines": 10,
             "fromHash": "a0f224fd7bd5f28ea5a752d41b9c9f6372fc6d9e",
             "toHash": "dc93f22caadcde35daf5cc2cd65d2738c87e31ca",
             "whiteSpace": "SHOW"
         }
     ],
-    "truncated": "true",
-    "contextLines": "10",
+    "truncated": true,
+    "contextLines": 10,
     "fromHash": "a0f224fd7bd5f28ea5a752d41b9c9f6372fc6d9e",
     "toHash": "dc93f22caadcde35daf5cc2cd65d2738c87e31ca",
     "whiteSpace": "SHOW"

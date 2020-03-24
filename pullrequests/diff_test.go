@@ -35,7 +35,7 @@ func (s *S) TestDiffInvalidHostTimeouted(c *check.C) {
 func (s *S) TestDiffValidHost(c *check.C) {
 	*s.host = "http://localhost:7993"
 
-	os.Args = []string{"pr", "diff", "21"}
+	os.Args = []string{"pr", "diff", "21", "-N"}
 
 	s.mockStdout()
 
