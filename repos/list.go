@@ -91,12 +91,13 @@ var List = &cobra.Command{
 			return repos[i].Slug > repos[j].Slug
 		})
 
-		header := []string{"ID", "Slug", "Links", "Status"}
+		header := []string{"ID", "Project", "Slug", "Links", "Status"}
 		table := common.Table(header)
 
 		for _, repo := range repos {
 			table.Append([]string{
 				fmt.Sprintf("%d", repo.ID),
+				repo.Project.Key,
 				repo.Slug,
 				func() (r string) {
 					for _, link := range repo.Links.Clone {
