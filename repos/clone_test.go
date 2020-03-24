@@ -41,7 +41,7 @@ func (s *S) TestCloneValidHost(c *check.C) {
 
 	ctx := common.APIClientContext(&s.stashInfo)
 	err := Clone.ExecuteContext(ctx)
-	c.Assert(err, check.ErrorMatches, "dial tcp: lookup.*")
+	c.Assert(err, check.NotNil)
 
 	s.closeMockStdout()
 

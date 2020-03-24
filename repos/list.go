@@ -15,13 +15,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// var (
-// 	listState *string
-// )
+var (
+	all *bool
+)
 
-// func init() {
-// 	listState = List.Flags().StringP("state", "s", "OPEN", "List only PR's in that state (ALL, OPEN, DECLINED or MERGED)")
-// }
+func init() {
+	all = List.Flags().BoolP("all", "A", false, "List repositories from ALL Projects.")
+}
 
 // List is the cmd implementation for Listing Repositories
 var List = &cobra.Command{
@@ -48,12 +48,17 @@ var List = &cobra.Command{
 			}
 
 			stashInfo := cmd.Context().Value(common.StashInfoKey).(*common.StashInfo)
-			err = mustHaveProject(stashInfo)
-			if err != nil {
-				return err
-			}
 
-			response, err := apiClient.DefaultApi.GetRepositoriesWithOptions(*stashInfo.Project(), opts)
+			var response *bitbucketv1.APIResponse
+			if !*all {
+				err = mustHaveProject(stashInfo)
+				if err != nil {
+					return err
+				}
+				response, err = apiClient.DefaultApi.GetRepositoriesWithOptions(*stashInfo.Project(), opts)
+			} else {
+				response, err = apiClient.DefaultApi.GetRepositories_19(opts)
+			}
 
 			if netError, ok := err.(net.Error); (!ok || (ok && !netError.Timeout())) &&
 				!errors.Is(err, context.Canceled) &&
