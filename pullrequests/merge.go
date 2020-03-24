@@ -33,7 +33,6 @@ var Merge = &cobra.Command{
 		defer cancel()
 
 		if err != nil {
-			log.Critical("Argument must be a pull request ID. Err: %s", err.Error())
 			return err
 		}
 

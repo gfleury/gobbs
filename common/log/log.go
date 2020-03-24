@@ -64,3 +64,13 @@ func Infof(format string, v ...interface{}) {
 func Critical(format string, v ...interface{}) {
 	log.Critical(format, v...)
 }
+
+// Noticef is equivalent to log.Print()
+func Noticef(format string, v ...interface{}) {
+	log.Noticef(format, v...)
+}
+
+// Warningf is equivalent to log.Print()
+func Warningf(format string, v ...interface{}) {
+	log.Warningf(format, v...)
+}
