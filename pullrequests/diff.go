@@ -59,7 +59,7 @@ var Diff = &cobra.Command{
 		}
 
 		opts := map[string]interface{}{
-			"contextLines": int32(3),
+			"contextLines": diffContextLines,
 		}
 
 		response, err := apiClient.DefaultApi.GetPullRequestDiff(*stashInfo.Project(), *stashInfo.Repo(), prID, opts)
