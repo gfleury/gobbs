@@ -8,6 +8,7 @@ import (
 	"github.com/gfleury/gobbs/common/log"
 	"github.com/gfleury/gobbs/pullrequests"
 	"github.com/gfleury/gobbs/repos"
+	"github.com/gfleury/gobbs/search"
 	"github.com/gfleury/gobbs/users"
 
 	"github.com/mitchellh/go-homedir"
@@ -41,6 +42,7 @@ func init() {
 	rootCmd.AddCommand(pullrequests.PullRequestRoot)
 	rootCmd.AddCommand(repos.ReposRoot)
 	rootCmd.AddCommand(users.UserRoot)
+	rootCmd.AddCommand(search.Search)
 }
 
 func initConfig() {

@@ -44,8 +44,12 @@ github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWo
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/gfleury/go-bitbucket-v1 v0.0.0-20200323232405-cf6f9657ee11 h1:aKzAz9aTpMcl0ngDp4sEqxe5A15WUKqY5j6HM+gWO50=
 github.com/gfleury/go-bitbucket-v1 v0.0.0-20200323232405-cf6f9657ee11/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200327185123-b3c7f99f7f5c h1:g+MQyHCXOctDwLAnMTf3BNWbcEWD3E4WPc25BA+8r3c=
+github.com/gfleury/go-bitbucket-v1 v0.0.0-20200327185123-b3c7f99f7f5c/go.mod h1:LB3osS9X2JMYmTzcCArHHLrndBAfcVLQAvUddfs+ONs=
 github.com/gfleury/go-bitbucket-v1/test/bb-mock-server v0.0.0-20200320112914-22f785dafa67 h1:Mcmu9maExtLad1ht5EBRLhl3kRMJSWvJNF0uEpAXS8k=
 github.com/gfleury/go-bitbucket-v1/test/bb-mock-server v0.0.0-20200320112914-22f785dafa67/go.mod h1:VssB0kb1cETNaFFC/0mHVCj+7i5TS2xraYq+tl9JLwE=
+github.com/gfleury/go-bitbucket-v1/test/bb-mock-server v0.0.0-20200327185123-b3c7f99f7f5c h1:TtwluceJdhyxNxI+Mo+St8hpRVUu+QE/jEcMr3STe9M=
+github.com/gfleury/go-bitbucket-v1/test/bb-mock-server v0.0.0-20200327185123-b3c7f99f7f5c/go.mod h1:VssB0kb1cETNaFFC/0mHVCj+7i5TS2xraYq+tl9JLwE=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/gliderlabs/ssh v0.2.2 h1:6zsha5zo/TWhRhwqCD3+EarCAgZ2yN28ipRnGPnwkI0=
 github.com/gliderlabs/ssh v0.2.2/go.mod h1:U7qILu1NlMHj9FlMhZLlkCdDnU1DBEAqr0aevW3Awn0=

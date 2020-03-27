@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"os"
-	"os/exec"
 	"strconv"
 
 	"github.com/gfleury/gobbs/common"
@@ -91,15 +89,7 @@ var Diff = &cobra.Command{
 			return err
 		}
 
-		less := exec.Command("less", "-r")
-
-		stdin, err := less.StdinPipe()
-		if err != nil {
-			log.Critical(err.Error())
-			stdin = os.Stdin
-		}
-
-		less.Stdout = os.Stdout
+		less, stdin := common.Pager()
 
 		go func() {
 			for _, diff := range diffs.Diffs {

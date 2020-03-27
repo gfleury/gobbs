@@ -1,0 +1,79 @@
+/rest/search/latest/search
+SearchCode
+// Repository
+// PROJECT/repository: git.py
+	5  
+	6  from git import Repo, Git
+	7  from git.exc import GitError
+	8  
+	9  from git import GitUtilError
+	10  
+	11  
+	12  def checkout(local_path, branch=None, ssh_key=None, allow_overwrite=False, allow_remote_checkout=True,
+	13               remote_path=None):
+	14      if Path(local_path).exists():
+	15  
+	16          try:
+	17              repo = Repo(local_path)
+	18          except GitError:
+	19              if allow_overwrite and allow_remote_checkout:
+	20                  shutil.rmtree(local_path, ignore_errors=True)
+	21                  clone_remote(remote_path, local_path, branch, ssh_key)
+	22                  return
+	23              else:
+	24                  raise GitUtilError("Path '%s' already exists and is not a valid git repo. " % local_path +
+	25                                     "Either allow_overwrite or allow_remote_checkout is set to False.")
+	26  
+	27          if branch:
+	28              try:
+	29                  git_branch = None
+	30  
+	31                  for local_branch in repo.heads:
+	32                      if local_branch.name == branch:
+	33                          git_branch = local_branch
+	34  
+	35                  git_branch = git_branch or repo.create_head(branch)
+	36  
+	37                  if repo.active_branch != git_branch:
+	38                      if allow_overwrite
+	38  :
+	39                          git_branch.checkout()
+	40                      else:
+	41                          raise GitUtilError("Path '%s' already exists and is a a valid git repo, " % local_path +
+	42                                             "but another branch is active and allow_overwrite is set to False")
+	43  
+	44              except GitError as error:
+	45                  raise GitUtilError(str(error))
+	46  
+	47          repo.remotes.origin.pull()
+	48  
+	49      else:
+	50          if allow_remote_checkout and remote_path:
+	51              clone_remote(remote_path, local_path, branch, ssh_key)
+	52          else:
+	53              raise GitUtilError("Path '%s' does not exist. Could not clone remote, either because " % local_path +
+	54                                 "allow_remote_checkout is set to False, or no remote URL is provided")
+	55  
+	56  
+	57  def clone_remote(remote_path, local_path, branch=None, ssh_key=None):
+	58      '''
+	59      Clone a remote repo to a local path
+	60      :param remote_path: the remote URL;)
+	61      :param local_path: the local URL (e.g. '/home/username/work/table-precomp')
+	62      :param branch: the branch to checkout (e.g. 'TAPI-xxx_optimizing_performance')
+	63      :param ssh_key: the path to your local ssh identity key for the remote repo
+	64      '''
+	65  
+	66      def __clone_remote(remote_path, local_path, branch=None):
+	67          try:
+	68              Repo.clone_from(remote_path, local_path, branch=branch or 'master')
+	69          except GitError as error:
+	70              raise GitUtilError(str(error))
+	71  
+	72      if ssh_key:
+	73          git_ssh_cmd = 'ssh -i %s' % ssh_key
+	74          with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
+	75              __clone_remote(remote_path, local_path, branch)
+	76      else:
+	77          __clone_remote(remote_path, local_path, branch)
+

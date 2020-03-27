@@ -1,0 +1,342 @@
+{
+  "scope": {
+    "type": "GLOBAL"
+  },
+  "code": {
+    "category": "primary",
+    "isLastPage": true,
+    "count": 187,
+    "start": 0,
+    "nextStart": 25,
+    "values": [
+      {
+        "repository": {
+          "slug": "repository",
+          "id": 365,
+          "name": "repository",
+          "scmId": "git",
+          "state": "AVAILABLE",
+          "statusMessage": "Available",
+          "forkable": true,
+          "project": {
+            "key": "PROJECT",
+            "id": 1,
+            "name": "Project One",
+            "description": "Misc utilities .",
+            "public": false,
+            "type": "NORMAL",
+            "avatarUrl": "/projects/UTIL/avatar.png?s=64&v=1451399004000"
+          },
+          "public": false
+        },
+        "file": "git.py",
+        "hitContexts": [
+          [
+            {
+              "line": 5,
+              "text": ""
+            },
+            {
+              "line": 6,
+              "text": "from <em>git</em> import Repo, <em>Git</em>"
+            },
+            {
+              "line": 7,
+              "text": "from <em>git</em>.exc import <em>Git</em>Error"
+            },
+            {
+              "line": 8,
+              "text": ""
+            },
+            {
+              "line": 9,
+              "text": "from git import <em>Git</em>UtilError"
+            },
+            {
+              "line": 10,
+              "text": ""
+            },
+            {
+              "line": 11,
+              "text": ""
+            },
+            {
+              "line": 12,
+              "text": "def checkout(local_path, branch=None, ssh_key=None, allow_overwrite=False, allow_remote_checkout=True,"
+            },
+            {
+              "line": 13,
+              "text": "             remote_path=None):"
+            },
+            {
+              "line": 14,
+              "text": "    if Path(local_path).exists():"
+            },
+            {
+              "line": 15,
+              "text": ""
+            },
+            {
+              "line": 16,
+              "text": "        try:"
+            },
+            {
+              "line": 17,
+              "text": "            repo = Repo(local_path)"
+            },
+            {
+              "line": 18,
+              "text": "        except <em>Git</em>Error:"
+            },
+            {
+              "line": 19,
+              "text": "            if allow_overwrite and allow_remote_checkout:"
+            },
+            {
+              "line": 20,
+              "text": "                shutil.rmtree(local_path, ignore_errors=True)"
+            },
+            {
+              "line": 21,
+              "text": "                <em>clone</em>_remote(remote_path, local_path, branch, ssh_key)"
+            },
+            {
+              "line": 22,
+              "text": "                return"
+            },
+            {
+              "line": 23,
+              "text": "            else:"
+            },
+            {
+              "line": 24,
+              "text": "                raise <em>Git</em>UtilError(&quot;Path &#x27;%s&#x27; already exists and is not a valid <em>git</em> repo. &quot; % local_path +"
+            },
+            {
+              "line": 25,
+              "text": "                                   &quot;Either allow_overwrite or allow_remote_checkout is set to False.&quot;)"
+            },
+            {
+              "line": 26,
+              "text": ""
+            },
+            {
+              "line": 27,
+              "text": "        if branch:"
+            },
+            {
+              "line": 28,
+              "text": "            try:"
+            },
+            {
+              "line": 29,
+              "text": "                <em>git</em>_branch = None"
+            },
+            {
+              "line": 30,
+              "text": ""
+            },
+            {
+              "line": 31,
+              "text": "                for local_branch in repo.heads:"
+            },
+            {
+              "line": 32,
+              "text": "                    if local_branch.name == branch:"
+            },
+            {
+              "line": 33,
+              "text": "                        <em>git</em>_branch = local_branch"
+            },
+            {
+              "line": 34,
+              "text": ""
+            },
+            {
+              "line": 35,
+              "text": "                <em>git</em>_branch = <em>git</em>_branch or repo.create_head(branch)"
+            },
+            {
+              "line": 36,
+              "text": ""
+            },
+            {
+              "line": 37,
+              "text": "                if repo.active_branch != <em>git</em>_branch:"
+            },
+            {
+              "line": 38,
+              "text": "                    if allow_overwrite"
+            }
+          ],
+          [
+            {
+              "line": 38,
+              "text": ":"
+            },
+            {
+              "line": 39,
+              "text": "                        <em>git</em>_branch.checkout()"
+            },
+            {
+              "line": 40,
+              "text": "                    else:"
+            },
+            {
+              "line": 41,
+              "text": "                        raise <em>Git</em>UtilError(&quot;Path &#x27;%s&#x27; already exists and is a a valid <em>git</em> repo, &quot; % local_path +"
+            },
+            {
+              "line": 42,
+              "text": "                                           &quot;but another branch is active and allow_overwrite is set to False&quot;)"
+            },
+            {
+              "line": 43,
+              "text": ""
+            },
+            {
+              "line": 44,
+              "text": "            except <em>Git</em>Error as error:"
+            },
+            {
+              "line": 45,
+              "text": "                raise <em>Git</em>UtilError(str(error))"
+            },
+            {
+              "line": 46,
+              "text": ""
+            },
+            {
+              "line": 47,
+              "text": "        repo.remotes.origin.pull()"
+            },
+            {
+              "line": 48,
+              "text": ""
+            },
+            {
+              "line": 49,
+              "text": "    else:"
+            },
+            {
+              "line": 50,
+              "text": "        if allow_remote_checkout and remote_path:"
+            },
+            {
+              "line": 51,
+              "text": "            <em>clone</em>_remote(remote_path, local_path, branch, ssh_key)"
+            },
+            {
+              "line": 52,
+              "text": "        else:"
+            },
+            {
+              "line": 53,
+              "text": "            raise <em>Git</em>UtilError(&quot;Path &#x27;%s&#x27; does not exist. Could not <em>clone</em> remote, either because &quot; % local_path +"
+            },
+            {
+              "line": 54,
+              "text": "                               &quot;allow_remote_checkout is set to False, or no remote URL is provided&quot;)"
+            },
+            {
+              "line": 55,
+              "text": ""
+            },
+            {
+              "line": 56,
+              "text": ""
+            },
+            {
+              "line": 57,
+              "text": "def <em>clone</em>_remote(remote_path, local_path, branch=None, ssh_key=None):"
+            },
+            {
+              "line": 58,
+              "text": "    &#x27;&#x27;&#x27;"
+            },
+            {
+              "line": 59,
+              "text": "    <em>Clone</em> a remote repo to a local path"
+            },
+            {
+              "line": 60,
+              "text": "    :param remote_path: the remote URL;)"
+            },
+            {
+              "line": 61,
+              "text": "    :param local_path: the local URL (e.g. &#x27;&#x2F;home&#x2F;username&#x2F;work&#x2F;table-precomp&#x27;)"
+            },
+            {
+              "line": 62,
+              "text": "    :param branch: the branch to checkout (e.g. &#x27;TAPI-xxx_optimizing_performance&#x27;)"
+            },
+            {
+              "line": 63,
+              "text": "    :param ssh_key: the path to your local ssh identity key for the remote repo"
+            },
+            {
+              "line": 64,
+              "text": "    &#x27;&#x27;&#x27;"
+            },
+            {
+              "line": 65,
+              "text": ""
+            },
+            {
+              "line": 66,
+              "text": "    def __<em>clone</em>_remote(remote_path, local_path, branch=None):"
+            },
+            {
+              "line": 67,
+              "text": "        try:"
+            },
+            {
+              "line": 68,
+              "text": "            Repo.<em>clone</em>_from(remote_path, local_path, branch=branch or &#x27;master&#x27;)"
+            },
+            {
+              "line": 69,
+              "text": "        except <em>Git</em>Error as error:"
+            },
+            {
+              "line": 70,
+              "text": "            raise <em>Git</em>UtilError(str(error))"
+            },
+            {
+              "line": 71,
+              "text": ""
+            },
+            {
+              "line": 72,
+              "text": "    if ssh_key:"
+            },
+            {
+              "line": 73,
+              "text": "        <em>git</em>_ssh_cmd = &#x27;ssh -i %s&#x27; % ssh_key"
+            },
+            {
+              "line": 74,
+              "text": "        with <em>Git</em>().custom_environment(<em>GIT</em>_SSH_COMMAND=<em>git</em>_ssh_cmd):"
+            },
+            {
+              "line": 75,
+              "text": "            __<em>clone</em>_remote(remote_path, local_path, branch)"
+            },
+            {
+              "line": 76,
+              "text": "    else:"
+            },
+            {
+              "line": 77,
+              "text": "        __<em>clone</em>_remote(remote_path, local_path, branch)"
+            }
+          ]
+        ],
+        "hitCount": 36
+      }
+    ]
+  },
+  "query": {
+    "substituted": false
+  }
+}
