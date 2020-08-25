@@ -27,6 +27,14 @@ func (c *Credential) Passwd() *string {
 	return &c.passwd
 }
 
+func (c *Credential) SetUser(user string) {
+	c.user = user
+}
+
+func (c *Credential) SetPasswd(passwd string) {
+	c.passwd = passwd
+}
+
 func (c *Credential) IsNew() bool {
 	return c.new
 }

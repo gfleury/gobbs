@@ -30,6 +30,11 @@ func (s *StashInfo) Host() *string {
 	return &s.host
 }
 
+// SetHost return host from stashInfo struct
+func (s *StashInfo) SetHost(host string) {
+	s.host = host
+}
+
 // Project return project from stashInfo struct
 func (s *StashInfo) Project() *string {
 	return &s.project

@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/gfleury/gobbs/common"
-	"gopkg.in/check.v1"
+	check "gopkg.in/check.v1"
 )
 
 func Test(t *testing.T) { check.TestingT(t) }
@@ -54,4 +54,10 @@ func (s *S) TestGetContext(c *check.C) {
 	ctx := common.APIClientContext(&stashInfo)
 
 	c.Check(ctx.Value(common.StashInfoKey), check.Equals, &stashInfo)
+}
+
+func (s *S) TestConfigWithEnvVars(c *check.C) {
+	os.Setenv("USER", "user")
+	initConfig()
+	c.Assert(common.Config().Get("user"), check.Equals, "user")
 }

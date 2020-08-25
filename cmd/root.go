@@ -51,6 +51,22 @@ func initConfig() {
 
 	common.SetConfig(viper.NewWithOptions(viper.KeyDelimiter("::")))
 
+	common.Config().AutomaticEnv()
+
+	if cfgFile == "" {
+		cfgFile = common.Config().GetString("CONFIG")
+	}
+
+	if *stashInfo.Host() == "" {
+		stashInfo.SetHost(common.Config().GetString("HOST"))
+	}
+	if *stashInfo.Credential().User() == "" {
+		stashInfo.Credential().SetUser(common.Config().GetString("USER"))
+	}
+	if *stashInfo.Credential().Passwd() == "" {
+		stashInfo.Credential().SetPasswd(common.Config().GetString("PASSWD"))
+	}
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		common.Config().SetConfigFile(cfgFile)
@@ -66,8 +82,6 @@ func initConfig() {
 		common.Config().SetConfigName(fmt.Sprintf(".%s", common.AppName))
 		cfgFile = fmt.Sprintf("%s/.%s.yaml", home, common.AppName)
 	}
-
-	common.Config().AutomaticEnv()
 
 	if err := common.Config().ReadInConfig(); err == nil {
 		log.Debugf("Using config file:", common.Config().ConfigFileUsed())
