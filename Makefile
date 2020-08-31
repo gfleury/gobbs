@@ -20,5 +20,4 @@ clean:
 	go clean $(PKGS)
 
 lint:
-	go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-	golangci-lint run
+	docker run --rm -it -v ${PWD}:/go/src/github.com/gfleury/gobbs -w /go/src/github.com/gfleury/gobbs golangci/golangci-lint:latest golangci-lint run
