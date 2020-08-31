@@ -57,7 +57,7 @@ func (s *S) TestGetContext(c *check.C) {
 }
 
 func (s *S) TestConfigWithEnvVars(c *check.C) {
-	os.Setenv("USER", "user")
+	os.Setenv("GOBBS_USER", "user")
 	initConfig()
 	c.Assert(common.Config().Get("user"), check.Equals, "user")
 }

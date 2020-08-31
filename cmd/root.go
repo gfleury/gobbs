@@ -11,7 +11,7 @@ import (
 	"github.com/gfleury/gobbs/search"
 	"github.com/gfleury/gobbs/users"
 
-	"github.com/mitchellh/go-homedir"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -51,20 +51,21 @@ func initConfig() {
 
 	common.SetConfig(viper.NewWithOptions(viper.KeyDelimiter("::")))
 
+	common.Config().SetEnvPrefix("GOBBS")
 	common.Config().AutomaticEnv()
 
 	if cfgFile == "" {
-		cfgFile = common.Config().GetString("CONFIG")
+		cfgFile = common.Config().GetString("config")
 	}
 
 	if *stashInfo.Host() == "" {
-		stashInfo.SetHost(common.Config().GetString("HOST"))
+		stashInfo.SetHost(common.Config().GetString("host"))
 	}
 	if *stashInfo.Credential().User() == "" {
-		stashInfo.Credential().SetUser(common.Config().GetString("USER"))
+		stashInfo.Credential().SetUser(common.Config().GetString("user"))
 	}
 	if *stashInfo.Credential().Passwd() == "" {
-		stashInfo.Credential().SetPasswd(common.Config().GetString("PASSWD"))
+		stashInfo.Credential().SetPasswd(common.Config().GetString("passwd"))
 	}
 
 	if cfgFile != "" {
