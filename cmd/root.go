@@ -11,7 +11,7 @@ import (
 	"github.com/gfleury/gobbs/search"
 	"github.com/gfleury/gobbs/users"
 
-	"github.com/mitchellh/go-homedir"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -51,6 +51,23 @@ func initConfig() {
 
 	common.SetConfig(viper.NewWithOptions(viper.KeyDelimiter("::")))
 
+	common.Config().SetEnvPrefix("GOBBS")
+	common.Config().AutomaticEnv()
+
+	if cfgFile == "" {
+		cfgFile = common.Config().GetString("config")
+	}
+
+	if *stashInfo.Host() == "" {
+		stashInfo.SetHost(common.Config().GetString("host"))
+	}
+	if *stashInfo.Credential().User() == "" {
+		stashInfo.Credential().SetUser(common.Config().GetString("user"))
+	}
+	if *stashInfo.Credential().Passwd() == "" {
+		stashInfo.Credential().SetPasswd(common.Config().GetString("passwd"))
+	}
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		common.Config().SetConfigFile(cfgFile)
@@ -66,8 +83,6 @@ func initConfig() {
 		common.Config().SetConfigName(fmt.Sprintf(".%s", common.AppName))
 		cfgFile = fmt.Sprintf("%s/.%s.yaml", home, common.AppName)
 	}
-
-	common.Config().AutomaticEnv()
 
 	if err := common.Config().ReadInConfig(); err == nil {
 		log.Debugf("Using config file:", common.Config().ConfigFileUsed())
